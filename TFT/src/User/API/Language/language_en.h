@@ -326,6 +326,7 @@
 #define STRING_Y_DEC                  "Y-"
 #define STRING_Z_DEC                  "Z-"
 #define STRING_X                      "X"
+#define STRING_XY                     "XY"
 #define STRING_Y                      "Y"
 #define STRING_Z                      "Z"
 #define STRING_ADJUST_TITLE           "Touch Screen Calibration"
@@ -378,5 +379,6 @@
 #define STRING_CONNECT_PROBE          "Connect probe before starting the process. Make sure to disconnect it afterwards."
 #define STRING_DISCONNECT_PROBE       "Make sure you have disconnected probe before using this feature."
 #define STRING_CALIBRATION            "Calibrate"
+#define STRING_MPCNC                  "mpCNC"
 
 #endif

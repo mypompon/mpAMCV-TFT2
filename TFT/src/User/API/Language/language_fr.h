@@ -326,6 +326,7 @@
 #define STRING_Y_DEC                  "Y-"
 #define STRING_Z_DEC                  "Z-"
 #define STRING_X                      "X"
+#define STRING_XY                     "XY"
 #define STRING_Y                      "Y"
 #define STRING_Z                      "Z"
 #define STRING_ADJUST_TITLE           "Calibration écran tactile"
@@ -378,5 +379,6 @@
 #define STRING_CONNECT_PROBE          "Connectez le palpeur avant de démarrer le processus. Veillez à le déconnecter ensuite."
 #define STRING_DISCONNECT_PROBE       "Assurez-vous d'avoir déconnecté le palpeur avant d'utiliser cette fonctionnalité."
 #define STRING_CALIBRATION            "Calibrer"
+#define STRING_MPCNC                  "mpCNC"
 
 #endif

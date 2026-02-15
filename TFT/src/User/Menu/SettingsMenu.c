@@ -11,7 +11,7 @@ static const MENUITEMS settingsItems = {
     {ICON_FEATURE_SETTINGS,        LABEL_FEATURE_SETTINGS},
     {ICON_SCREEN_INFO,             LABEL_SCREEN_INFO},
     {ICON_CONNECTION_SETTINGS,     LABEL_CONNECTION_SETTINGS},
-    {ICON_NULL,                    LABEL_NULL},
+    {ICON_CUSTOM,                  LABEL_CUSTOM},
     {ICON_NULL,                    LABEL_NULL},
     {ICON_BACK,                    LABEL_BACK},
   }
@@ -187,6 +187,10 @@ void menuSettings(void)
         OPEN_MENU(menuConnectionSettings);
         break;
 
+      case KEY_ICON_5:
+        OPEN_MENU(menuCustom);
+        break;
+         
       case KEY_ICON_7:
         CLOSE_MENU();
         break;

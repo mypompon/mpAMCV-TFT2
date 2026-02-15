@@ -10,7 +10,7 @@ static const MENUITEMS homeItems = {
     {ICON_X_HOME,                  LABEL_X},
     {ICON_Y_HOME,                  LABEL_Y},
     {ICON_Z_HOME,                  LABEL_Z},
-    {ICON_NULL,                    LABEL_NULL},
+    {ICON_XY_HOME,                 LABEL_XY},
     {ICON_NULL,                    LABEL_NULL},
     {ICON_NULL,                    LABEL_NULL},
     {ICON_BACK,                    LABEL_BACK},
@@ -33,6 +33,7 @@ void menuHome(void)
       case KEY_ICON_1: storeCmd("G28 X\n"); break;
       case KEY_ICON_2: storeCmd("G28 Y\n"); break;
       case KEY_ICON_3: storeCmd("G28 Z\n"); break;
+      case KEY_ICON_4: storeCmd("G28 XY\n"); break;
       case KEY_ICON_7: CLOSE_MENU();        break;
       default:                              break;
     }

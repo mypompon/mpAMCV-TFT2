@@ -147,6 +147,7 @@
 #include "SelectMode.h"
 #include "SettingsMenu.h"
 #include "Speed.h"
+#include "MpCNC.h"
 #include "StatusScreen.h"
 #include "Terminal.h"
 #include "Touchmi.h"

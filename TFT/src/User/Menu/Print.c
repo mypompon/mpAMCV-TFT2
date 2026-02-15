@@ -397,7 +397,7 @@ void menuPrint(void)
       {ICON_NULL,                    LABEL_NULL},
       {ICON_NULL,                    LABEL_NULL},
       {ICON_SCREEN_INFO,             LABEL_PREVIOUS_PRINT_DATA},
-      {ICON_NULL,                    LABEL_NULL},
+      {ICON_FAST_SPEED,              LABEL_PERCENTAGE_SPEED},
       {ICON_NULL,                    LABEL_NULL},
       {ICON_BACK,                    LABEL_BACK},
     }
@@ -488,6 +488,10 @@ void menuPrint(void)
       case KEY_ICON_4:
         if (infoPrintSummary.name[0] != '\0')
           printSummaryPopup();
+        break;
+
+      case KEY_ICON_5:
+        OPEN_MENU(menuSpeed);
         break;
 
       case KEY_ICON_7:

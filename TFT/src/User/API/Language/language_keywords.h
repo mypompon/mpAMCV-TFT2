@@ -2,7 +2,7 @@
 #define _LANGUAGE_KEYWORDS_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C" { 
 #endif
 
 #include <stdbool.h>
@@ -333,6 +333,7 @@ extern "C" {
 #define LANG_KEY_Y_DEC                  "label_y_dec:"
 #define LANG_KEY_Z_DEC                  "label_z_dec:"
 #define LANG_KEY_X                      "label_x:"
+#define LANG_KEY_XY                     "label_xy:"
 #define LANG_KEY_Y                      "label_y:"
 #define LANG_KEY_Z                      "label_z:"
 #define LANG_KEY_ADJUST_TITLE           "label_adjust_title:"
@@ -385,6 +386,7 @@ extern "C" {
 #define LANG_KEY_CONNECT_PROBE          "label_connect_probe:"
 #define LANG_KEY_DISCONNECT_PROBE       "label_disconnect_probe:"
 #define LANG_KEY_CALIBRATION            "label_calibration:"
+#define LANG_KEY_MPCNC                  "label_mpcnc:"
 
 #ifdef __cplusplus
 }
