@@ -15,6 +15,9 @@ static const uint16_t default_ext_speed[]   = {EXTRUDE_SLOW_SPEED, EXTRUDE_NORMA
 static const uint16_t default_pause_speed[] = {NOZZLE_PAUSE_XY_FEEDRATE, NOZZLE_PAUSE_Z_FEEDRATE, NOZZLE_PAUSE_E_FEEDRATE};
 static const uint16_t default_level_speed[] = {LEVELING_XY_FEEDRATE, LEVELING_Z_FEEDRATE};
 static const uint8_t default_led_color[]    = {LED_R, LED_G, LED_B, LED_W, LED_P, LED_I};
+#ifdef CNC_MENU
+  const uint16_t default_cnc_laser_max    = CNC_LASER_MAX;
+#endif
 
 // init settings data with default values
 void initSettings(void)
@@ -182,6 +185,11 @@ void initSettings(void)
   {
     infoSettings.led_color[i]         = default_led_color[i];
   }
+
+  #ifdef CNC_MENU
+    infoSettings.cnc_laser_max          = default_cnc_laser_max;
+    infoSettings.cnc_percentage         = CNC_POWER_PERCENTAGE; 
+  #endif
 
   resetConfig();
 

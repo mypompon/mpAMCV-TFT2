@@ -280,6 +280,9 @@ typedef struct
 
   // Start, End & Cancel G-code Commands
   uint8_t  send_gcodes;  // send printing gcodes toggles (Bit Values)
+
+  uint16_t cnc_laser_max;
+  uint8_t  cnc_percentage;
 } SETTINGS;
 
 typedef struct

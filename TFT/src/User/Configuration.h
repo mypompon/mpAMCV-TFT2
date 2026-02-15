@@ -1556,4 +1556,32 @@
  */
 #define THUMBNAIL_PARSER 0  // Default: 0
 
+// Enable CNC Menu mutually exclusive to StatusScreen
+#define CNC_MENU
+
+#ifdef CNC_MENU
+  #define CNC_LASER // Enable Laser Interface instead of Fan Interface
+
+  // !!!!!!!!!!!!!!!!!!!!!! Mettre doc à jour !!!!!!!!!!!!!!!!!!!!
+
+  /**
+   * Cooling Fan & Controller Fan
+   * Cooling fan have index from 0 to 5.
+   * Controller fan have two speed (Active and Idle) index 6 and 7.
+   */
+  #define CNC_LASER_MAX           255
+  #define CNC_LASER_CMD_ON        "M03 S%d\n"
+  #define CNC_LASER_CMD_OFF       "M05\n"
+
+  /**
+   * Fan Speed In Percentage
+   * Show fan speed in percentage. If disabled fan speeed will be displayed as PWM values.
+   *
+   *   Options: [disable: 0, enable: 1]
+   */
+  #define CNC_POWER_PERCENTAGE 0  // Default: 1
+
+
+#endif
+
 #endif

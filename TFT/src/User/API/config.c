@@ -163,6 +163,9 @@
 #define CONFIG_START_GCODE           "start_gcode:"
 #define CONFIG_END_GCODE             "end_gcode:"
 #define CONFIG_CANCEL_GCODE          "cancel_gcode:"
+#define CONFIG_CNC_LASER_MAX         "cnc_laser_max:"
+#define CONFIG_CNC_POWER_PERCENTAGE  "cnc_percentage:"
+
 
 // this list is Auto-Generated. Please add new config in config.inc only
 enum
@@ -813,6 +816,12 @@ static void parseConfigKey(uint16_t index)
       break;
     }
 
+    case C_INDEX_CNC_LASER_MAX:
+      SET_VALID_INT_VALUE(infoSettings.cnc_laser_max, 0, 1024);
+      break;
+    case C_INDEX_CNC_POWER_PERCENTAGE:
+      infoSettings.cnc_percentage = getOnOff();
+      break;
     //----------------------------Power Supply Settings (only if connected to TFT controller)
 
     #ifdef PS_ON_PIN
