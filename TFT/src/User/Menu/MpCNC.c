@@ -1,5 +1,6 @@
 #include "MpCNC.h"
 #include "includes.h"
+#include "Hal/LCD_Encoder.h"   // encoderPosition + LCD_Enc_KeyValue()
 
 #define DUAL_VAL_FORMAT "%4d/%-4d"
 
@@ -15,8 +16,7 @@ static void mpCNCReDraw(bool skipHeader)
 
   if (!skipHeader)
   {
-    // displayExhibitHeader(LABEL_CNC_LASER, (infoSettings.cnc_percentage == 1) ? " % " : "PWM"); Marche pas, je ne sais pas pourquoi !!!!
-    displayExhibitHeader(LABEL_MPCNC, (infoSettings.cnc_percentage == 1) ? " % " : "PWM");
+    displayExhibitHeader("MpCNC", (infoSettings.cnc_percentage == 1) ? " % " : "PWM");
   }
 
   snprintf(tempstr, sizeof(tempstr), DUAL_VAL_FORMAT, (int)pwm_value, (int)pwm_max);
@@ -48,7 +48,7 @@ void menuMpCNC(void)
   delta = 1;
 
   MENUITEMS mpCNCItems = {
-    LABEL_MPCNC,  // Si tu as ajouté ce label. Sinon mets LABEL_CNC_LASER_SPINDLE ou un autre existant.
+    LABEL_MPCNC,
     {
       { ICON_DEC,         LABEL_DEC },
       { ICON_NULL,        LABEL_NULL },
@@ -68,7 +68,31 @@ void menuMpCNC(void)
 
   while (MENU_IS(menuMpCNC))
   {
-    key_num = menuKeyGetValue();
+    // IMPORTANT: mettre à jour les entrées (dont encoder) AVANT de lire
+    loopProcess();
+
+    // ----- 1) gestion directe de la rotation molette (robuste) -----
+    if (encoderPosition)
+    {
+      int32_t newVal = (int32_t)pwm_value + (int32_t)encoderPosition * (int32_t)delta;
+      if (newVal < 0) newVal = 0;
+      if (newVal > (int32_t)pwm_max) newVal = (int32_t)pwm_max;
+
+      pwm_value = (uint16_t)newVal;
+      encoderPosition = 0;
+
+      mpCNCReDraw(false);
+      sendLaserOrSpindle();
+    }
+    // ---------------------------------------------------------------
+
+    // ----- 2) clic / événements encodeur, sinon tactile -----
+    KEY_VALUES enc_key = LCD_Enc_KeyValue();
+    if (enc_key != KEY_IDLE)
+      key_num = enc_key;
+    else
+      key_num = menuKeyGetValue();
+    // --------------------------------------------------------
 
     switch (key_num)
     {
@@ -88,7 +112,7 @@ void menuMpCNC(void)
         if (val != (int16_t)pwm_value)
           pwm_value = (uint16_t)val;
 
-        // Redessiner proprement (comme ton ancien code)
+        // Redessiner proprement
         menuDrawPage(&mpCNCItems);
         mpCNCReDraw(true);
         sendLaserOrSpindle();
@@ -104,8 +128,7 @@ void menuMpCNC(void)
         break;
 
       case KEY_ICON_4:
-        // Bouton ON : dans ton ancien code tu mettais max/100 (≈ 1%)
-        // Je garde pareil. Si tu veux "plein pot", mets pwm_value = pwm_max;
+        // Bouton ON : 1% (comme ton ancien code). Pour "plein pot", mets pwm_value = pwm_max;
         pwm_value = (pwm_max / 100);
         mpCNCReDraw(false);
         sendLaserOrSpindle();
@@ -115,8 +138,7 @@ void menuMpCNC(void)
         // Changement du pas (1%, 5%, 10% etc.)
         percentSteps_index = (percentSteps_index + 1) % ITEM_PERCENT_STEPS_NUM;
 
-        // Si tu veux afficher l'icône du pas, il faut que itemPercent[] existe encore dans ta version.
-        // Si ça ne compile pas, commente les 2 lignes suivantes.
+        // Mise à jour de l'icône du pas
         mpCNCItems.items[key_num] = itemPercent[percentSteps_index];
         menuDrawItem(&mpCNCItems.items[key_num], key_num);
 
@@ -139,7 +161,5 @@ void menuMpCNC(void)
       default:
         break;
     }
-
-    loopProcess();
   }
 }

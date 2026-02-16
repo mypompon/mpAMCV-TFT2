@@ -11,12 +11,12 @@ void menuMain(void)
     {
       {ICON_HOME,                    LABEL_HOME},
       {ICON_MOVE,                    LABEL_MOVE},
-      {ICON_NOZZLE,            LABEL_MPCNC},
+      {ICON_NOZZLE,                  LABEL_MPCNC},
       {ICON_STOP,                    LABEL_EMERGENCYSTOP},
       {ICON_GCODE,                   LABEL_TERMINAL},
-      {ICON_DISABLE_STEPPERS,        LABEL_DISABLE_STEPPERS},
+      {ICON_CUSTOM,                  LABEL_MACROS}, //{ICON_DISABLE_STEPPERS,        LABEL_DISABLE_STEPPERS},
       {ICON_SETTINGS,                LABEL_SETTINGS},
-      {ICON_BACK,                    LABEL_BACK},
+      {ICON_STOP,                    LABEL_EMERGENCYSTOP},
     }
   };
 
@@ -27,8 +27,8 @@ void menuMain(void)
 
   if (infoSettings.status_screen != 1)
   {
-    mainPageItems.items[7].icon = ICON_PRINT;
-    mainPageItems.items[7].label.index = LABEL_PRINT;
+    mainPageItems.items[3].icon = ICON_PRINT;
+    mainPageItems.items[3].label.index = LABEL_PRINT;
   }
 
   menuDrawPage(&mainPageItems);
@@ -51,7 +51,7 @@ void menuMain(void)
         OPEN_MENU(menuMpCNC);
         break;
 
-      case KEY_ICON_3:
+      case KEY_ICON_7:
         // Emergency Stop : Used for emergency stopping, a reset is required to return to operational mode.
         // it may need to wait for a space to open up in the command queue.
         // Enable EMERGENCY_PARSER in Marlin Firmware for an instantaneous M112 command.
@@ -70,7 +70,7 @@ void menuMain(void)
         OPEN_MENU(menuSettings);
         break;
 
-      case KEY_ICON_7:
+      case KEY_ICON_3:
         if (infoSettings.status_screen != 1)
           OPEN_MENU(menuPrint);
         else
