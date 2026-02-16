@@ -1,76 +1,51 @@
 #include "Macros.h"
 #include "includes.h"
+#include "menu.h"
+#include "Settings.h"
+
+// Helper: force un LABEL à être une string (et pas un index langue)
+#define LABEL_STR(s)  (LABEL){ .index = LABEL_NUM, .address = (s) }
 
 void menuMacros(void)
 {
-  // 1 title, ITEM_PER_PAGE items (icon + label)
+  CUSTOM_GCODES customcodes;
+  W25Qxx_ReadBuffer((uint8_t *)&customcodes, CUSTOM_GCODE_ADDR, sizeof(CUSTOM_GCODES));
+
   MENUITEMS macrosPageItems = {
-    // title
-    LABEL_MACROS,
-    // icon                          label
-    {
-      {ICON_HOME,                    LABEL_TERMINAL},
-      {ICON_MOVE,                    LABEL_TERMINAL},
-      {ICON_NOZZLE,                  LABEL_TERMINAL},
-      {ICON_STOP,                    LABEL_TERMINAL},
-      {ICON_GCODE,                   LABEL_TERMINAL},
-      {ICON_NULL,                    LABEL_NULL}, 
-      {ICON_DISABLE_STEPPERS,        LABEL_DISABLE_STEPPERS},
-      {ICON_BACK,                    LABEL_BACK },
+    { .index = LABEL_MACROS },
+    .items = {
+      { ICON_HOME,              LABEL_STR(customcodes.name[0]) },
+      { ICON_BABYSTEP,          LABEL_STR(customcodes.name[1]) },
+      { ICON_RGB_WHITE,         LABEL_STR(customcodes.name[2]) },
+      { ICON_RGB_OFF,           LABEL_STR(customcodes.name[3]) },
+      { ICON_FAN,               LABEL_STR(customcodes.name[4]) },
+      { ICON_DISABLE_STEPPERS,  { .index = LABEL_DISABLE_STEPPERS } },
+      { ICON_GCODE,             { .index = LABEL_TERMINAL } },
+      { ICON_BACK,              { .index = LABEL_BACK } },
     }
   };
 
-  KEY_VALUES key_num = KEY_IDLE;
-
-  if (infoMachineSettings.firmwareType == FW_REPRAPFW)
-    macrosPageItems.items[5].label.index = LABEL_MACROS;
-
-  if (infoSettings.status_screen != 1)
-  {
-    macrosPageItems.items[3].icon = ICON_PRINT;
-    macrosPageItems.items[3].label.index = LABEL_PRINT;
-  }
-
   menuDrawPage(&macrosPageItems);
-  menuDrawItemStr(KEY_ICON_0, ICON_HOME,  "xx");
-
 
   while (MENU_IS(menuMacros))
   {
-    key_num = menuKeyGetValue();
+    KEY_VALUES key = menuKeyGetValue();
 
-    switch (key_num)
+    switch (key)
     {
-      case KEY_ICON_0:
-        OPEN_MENU(menuHome);
-        break;
-
-      case KEY_ICON_1:
-        OPEN_MENU(menuMove);
-        break;
-      
-      case KEY_ICON_2:
-        OPEN_MENU(menuMpCNC);
-        break;
-
-      case KEY_ICON_3:
-        // Emergency Stop : Used for emergency stopping, a reset is required to return to operational mode.
-        // it may need to wait for a space to open up in the command queue.
-        // Enable EMERGENCY_PARSER in Marlin Firmware for an instantaneous M112 command.
-        sendEmergencyCmd("M112\n");
-        break;
-
-      case KEY_ICON_4:
-        OPEN_MENU(menuTerminal);
-        break;
-
+      case KEY_ICON_0: storeCmd(customcodes.gcode[0]); break;
+      case KEY_ICON_1: storeCmd(customcodes.gcode[1]); break;
+      case KEY_ICON_2: storeCmd(customcodes.gcode[2]); break;
+      case KEY_ICON_3: storeCmd(customcodes.gcode[3]); break;
+      case KEY_ICON_4: storeCmd(customcodes.gcode[4]); break;
       case KEY_ICON_5:
-        
+        storeCmd("M84\n");
         break;
 
       case KEY_ICON_6:
-        storeCmd("M84\n");
+        OPEN_MENU(menuTerminal);
         break;
+
 
       case KEY_ICON_7:
         CLOSE_MENU();

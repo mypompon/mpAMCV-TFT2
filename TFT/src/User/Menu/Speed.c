@@ -42,7 +42,7 @@ void menuSpeed(void)
       {ICON_NULL,                    LABEL_NULL},
       {ICON_NULL,                    LABEL_NULL},
       {ICON_INC,                     LABEL_INC},
-      {ICON_MOVE,                    LABEL_PERCENTAGE_SPEED},
+      {ICON_NULL,                    LABEL_NULL},
       {ICON_E_5_PERCENT,             LABEL_5_PERCENT},
       {ICON_NORMAL_SPEED,            LABEL_NORMAL},
       {ICON_BACK,                    LABEL_BACK},
@@ -56,10 +56,13 @@ void menuSpeed(void)
 
   speedSetTargetPercent(item_index, speedGetCurrentPercent(item_index));
   lastSpeed = (LASTSPEED) {speedGetCurrentPercent(item_index), speedGetTargetPercent(item_index)};
+  if (infoSettings.ext_count > 0) {
+    percentageItems.title.index = itemPercentTypeTitle[item_index];
+    percentageItems.items[KEY_ICON_4] = itemPercentType[item_index];
+    percentageItems.items[KEY_ICON_5] = itemPercent[percentSteps_index];
+  }
 
-  percentageItems.title.index = itemPercentTypeTitle[item_index];
-  percentageItems.items[KEY_ICON_4] = itemPercentType[item_index];
-  percentageItems.items[KEY_ICON_5] = itemPercent[percentSteps_index];
+
 
   menuDrawPage(&percentageItems);
   percentageReDraw(item_index, true);
@@ -94,15 +97,16 @@ void menuSpeed(void)
         break;
 
       case KEY_ICON_4:
-        if (infoSettings.ext_count > 0)
+        if (infoSettings.ext_count > 0) {
           item_index = (item_index + 1) % SPEED_NUM;
 
-        percentageItems.title.index = itemPercentTypeTitle[item_index];
-        percentageItems.items[key_num] = itemPercentType[item_index];
+          percentageItems.title.index = itemPercentTypeTitle[item_index];
+          percentageItems.items[key_num] = itemPercentType[item_index];
 
-        menuDrawTitle();
-        menuDrawItem(&percentageItems.items[key_num], key_num);
-        percentageReDraw(item_index, true);
+          menuDrawTitle();
+          menuDrawItem(&percentageItems.items[key_num], key_num);
+          percentageReDraw(item_index, true);
+        }
         break;
 
       case KEY_ICON_5:
