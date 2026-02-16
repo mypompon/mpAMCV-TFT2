@@ -148,6 +148,7 @@
 #include "SettingsMenu.h"
 #include "Speed.h"
 #include "MpCNC.h"
+#include "Macros.h"
 #include "StatusScreen.h"
 #include "Terminal.h"
 #include "Touchmi.h"
