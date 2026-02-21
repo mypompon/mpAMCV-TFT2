@@ -47,9 +47,9 @@ static const MENUITEMS statusItems = {
   LABEL_READY,
   // icon                          label
   {
-    {ICON_STATUS_NOZZLE,           LABEL_NULL},
-    {ICON_STATUS_BED,              LABEL_NULL},
-    {ICON_STATUS_FAN,              LABEL_NULL},
+    {ICON_HOME,                    LABEL_HOME},
+    {ICON_MOVE,                    LABEL_MOVE},
+    {ICON_STOP,                    LABEL_EMERGENCYSTOP},
     {ICON_STATUS_SPEED,            LABEL_NULL},
     #ifdef TFT70_V3_0
       {ICON_STATUS_FLOW,             LABEL_NULL},
@@ -63,7 +63,6 @@ static const MENUITEMS statusItems = {
   }
 };
 
-static const uint8_t bedIcons[2]     = {ICON_STATUS_BED, ICON_STATUS_CHAMBER};
 #ifndef TFT70_V3_0
   static const uint8_t speedIcons[2] = {ICON_STATUS_SPEED, ICON_STATUS_FLOW};
 #endif
@@ -132,61 +131,6 @@ static void statusDraw(void)
     lvIcon.lines[2].fn_color = SS_VAL_COLOR_2;
     lvIcon.lines[2].text_mode = GUI_TEXTMODE_TRANS;  // default value
   #endif
-
-  #ifdef TFT70_V3_0
-    char tempstr2[45];
-
-    // TOOL / EXT
-    lvIcon.iconIndex = ICON_STATUS_NOZZLE;
-    lvIcon.lines[0].text = heatShortID[currentTool];
-    sprintf(tempstr, "%3d℃", heatGetCurrentTemp(currentTool));
-    sprintf(tempstr2, "%3d℃", heatGetTargetTemp(currentTool));
-    lvIcon.lines[1].text = tempstr;
-    lvIcon.lines[2].text = tempstr2;
-
-    showLiveInfo(0, &lvIcon, false);
-
-    // BED / CHAMBER
-    lvIcon.iconIndex = bedIcons[currentBCIndex];
-    lvIcon.lines[0].text = heatShortID[BED + currentBCIndex];
-    sprintf(tempstr, "%3d℃", heatGetCurrentTemp(BED + currentBCIndex));
-    sprintf(tempstr2, "%3d℃", heatGetTargetTemp(BED + currentBCIndex));
-    lvIcon.lines[1].text = tempstr;
-    lvIcon.lines[2].text = tempstr2;
-
-    showLiveInfo(1, &lvIcon, infoSettings.chamber_en == 1);
-
-    lvIcon.enabled[2] = false;
-  #else
-    // TOOL / EXT
-    lvIcon.iconIndex = ICON_STATUS_NOZZLE;
-    lvIcon.lines[0].text = heatShortID[currentTool];
-    sprintf(tempstr, "%3d/%-3d", heatGetCurrentTemp(currentTool), heatGetTargetTemp(currentTool));
-    lvIcon.lines[1].text = tempstr;
-
-    showLiveInfo(0, &lvIcon, false);
-
-    // BED
-    lvIcon.iconIndex = bedIcons[currentBCIndex];
-    lvIcon.lines[0].text = heatShortID[BED + currentBCIndex];
-    sprintf(tempstr, "%3d/%-3d", heatGetCurrentTemp(BED + currentBCIndex), heatGetTargetTemp(BED + currentBCIndex));
-    lvIcon.lines[1].text = tempstr;
-
-    showLiveInfo(1, &lvIcon, infoSettings.chamber_en == 1);
-  #endif
-
-  // FAN
-  lvIcon.iconIndex = ICON_STATUS_FAN;
-  lvIcon.lines[0].text = fanID[currentFan];
-
-  if (infoSettings.fan_percentage == 1)
-    sprintf(tempstr, "%3d%%", fanGetCurrentPercent(currentFan));
-  else
-    sprintf(tempstr, "%3d", fanGetCurrentSpeed(currentFan));
-
-  lvIcon.lines[1].text = tempstr;
-
-  showLiveInfo(2, &lvIcon, false);
 
   #ifdef TFT70_V3_0
     // SPEED
@@ -284,7 +228,7 @@ static inline void statusToggleTool(void)
     }
 
     // switch speed/flow
-    TOGGLE_BIT(currentSpeedID, 0);
+    //TOGGLE_BIT(currentSpeedID, 0);
 
     statusDraw();
 
@@ -325,19 +269,18 @@ void menuStatus(void)
     switch (key_num)
     {
       case KEY_ICON_0:
-        heatSetCurrentIndex(LAST_NOZZLE);  // preselect last selected nozzle for "Heat" menu
-
-        OPEN_MENU(menuHeat);
+        OPEN_MENU(menuHome);
         break;
 
       case KEY_ICON_1:
-        heatSetCurrentIndex(BED);  // preselect the bed for "Heat" menu
-
-        OPEN_MENU(menuHeat);
+        OPEN_MENU(menuMove);
         break;
 
       case KEY_ICON_2:
-        OPEN_MENU(menuFan);
+        // Emergency Stop : Used for emergency stopping, a reset is required to return to operational mode.
+        // it may need to wait for a space to open up in the command queue.
+        // Enable EMERGENCY_PARSER in Marlin Firmware for an instantaneous M112 command.
+        sendEmergencyCmd("M112\n");
         break;
 
       case KEY_SPEEDMENU:

@@ -12,7 +12,7 @@ void menuMain(void)
       {ICON_HOME,                    LABEL_HOME},
       {ICON_MOVE,                    LABEL_MOVE},
       {ICON_NOZZLE,                  LABEL_MPCNC},
-      {ICON_STOP,                    LABEL_EMERGENCYSTOP},
+      {ICON_PRINT,                   LABEL_PRINT},
       {ICON_GCODE,                   LABEL_TERMINAL},
       {ICON_CUSTOM,                  LABEL_MACROS}, 
       {ICON_SETTINGS,                LABEL_SETTINGS},
@@ -25,10 +25,10 @@ void menuMain(void)
   if (infoMachineSettings.firmwareType == FW_REPRAPFW)
     mainPageItems.items[5].label.index = LABEL_MACROS;
 
-  if (infoSettings.status_screen != 1)
+  if (infoSettings.status_screen == 1)
   {
-    mainPageItems.items[3].icon = ICON_PRINT;
-    mainPageItems.items[3].label.index = LABEL_PRINT;
+    mainPageItems.items[7].icon = ICON_BACK;
+    mainPageItems.items[7].label.index = LABEL_BACK;
   }
 
   menuDrawPage(&mainPageItems);
@@ -51,11 +51,8 @@ void menuMain(void)
         OPEN_MENU(menuMpCNC);
         break;
 
-      case KEY_ICON_7:
-        // Emergency Stop : Used for emergency stopping, a reset is required to return to operational mode.
-        // it may need to wait for a space to open up in the command queue.
-        // Enable EMERGENCY_PARSER in Marlin Firmware for an instantaneous M112 command.
-        sendEmergencyCmd("M112\n");
+      case KEY_ICON_3:
+        OPEN_MENU(menuPrint);
         break;
 
       case KEY_ICON_4:
@@ -70,11 +67,14 @@ void menuMain(void)
         OPEN_MENU(menuSettings);
         break;
 
-      case KEY_ICON_3:
-        if (infoSettings.status_screen != 1)
-          OPEN_MENU(menuPrint);
-        else
+      case KEY_ICON_7:
+        if (infoSettings.status_screen == 1)
           CLOSE_MENU();
+        else
+          // Emergency Stop : Used for emergency stopping, a reset is required to return to operational mode.
+          // it may need to wait for a space to open up in the command queue.
+          // Enable EMERGENCY_PARSER in Marlin Firmware for an instantaneous M112 command.
+          sendEmergencyCmd("M112\n");
         break;
 
       default:
